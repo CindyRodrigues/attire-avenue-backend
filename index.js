@@ -21,19 +21,10 @@ app.use(express.json())
 
 initializeDatabase()
 
-const createProduct = async (newProduct) => {
-    try {
-        const product = new Product(newProduct)
-        const savedProduct = await product.save()
-        return savedProduct
-    } catch (error) {
-        console.log('Error adding product:', error)
-    }
-}
-
 app.post('/products', async (req, res) => {
     try {
-        const savedProduct = await createProduct(req.body)
+        const product = new Product(req.body)
+        const savedProduct = await product.save()
         if(savedProduct) {
             res.status(201).json({message: "Product added successfully.", product: savedProduct})
         }
@@ -42,18 +33,9 @@ app.post('/products', async (req, res) => {
     }
 })
 
-const getProducts = async () => {
-    try {
-        const products = await Product.find()
-        return products
-    } catch (error) {
-        console.log('Error getting products:', error)
-    }
-}
-
 app.get('/products', async (req, res) => {
     try {
-        const products = await getProducts()
+        const products = await Product.find()
         if(products.length != 0) {
             res.json(products)
         } else {
@@ -64,44 +46,26 @@ app.get('/products', async (req, res) => {
     }
 })
 
-const getProductById = async (productId) => {
-    try {
-        const product = await Product.findById(productId)
-        return product
-    } catch (error) {
-        console.log('Error getting product by id:', error)
-    }
-}
-
 app.get('/products/:productId', async (req, res) => {
     try {
-        const product = await getProductById(req.params.productId)
+        const product = await Product.findById(req.params.productId)
         if(product) {
             res.json(product)
         } else {
-            res.status(404).json({error: "Product not found."})
+            res.status(404).json({error: "No product found."})
         }
     } catch (error) {
         res.status(500).json({error: "Failed to fetch products."})
     }
 })
 
-const getProductsByCategory = async (categoryType) => {
-    try {
-        const products = await Product.find({category: categoryType})
-        return products
-    } catch (error) {
-        console.log("Error getting products by category:", error)
-    }
-}
-
 app.get('/products/categories/:category', async (req, res) => {
     try {
-        const products = await getProductsByCategory(req.params.category)
+        const products = await Product.find({ category: req.params.category })
         if(products.length != 0) {
             res.json(products)
         } else {
-            res.status(404).json({error: "Products not found."})
+            res.status(404).json({error: "No products found."})
         }
     } catch (error) {
         res.status(500).json({error: 'Failed to fetch products.'})
