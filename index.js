@@ -59,19 +59,6 @@ app.get('/products/:productId', async (req, res) => {
     }
 })
 
-app.get('/products/categories/:category', async (req, res) => {
-    try {
-        const products = await Product.find({ category: req.params.category })
-        if(products.length != 0) {
-            res.json(products)
-        } else {
-            res.status(404).json({error: "No products found."})
-        }
-    } catch (error) {
-        res.status(500).json({error: 'Failed to fetch products.'})
-    }
-})
-
 const PORT = 3000
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`)
