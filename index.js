@@ -98,6 +98,17 @@ app.delete('/wishlist/:productId', async (req, res) => {
     }
 })
 
+app.get('/cart', async (req, res) => {
+    try {
+        const cart = await Cart.find()
+        if(cart) {
+            res.status(200).json(cart)
+        }
+    } catch (error) {
+        res.status(500).json({error: "Failed to fetch cart items."})
+    }
+})
+
 app.post('/cart', async (req, res) => {
     try {
         const { productId } = req.body
