@@ -85,17 +85,17 @@ app.post('/wishlist', async (req, res) => {
     }
 })
 
-// app.delete('/wishlist/:productId', async (req, res) => {
-//     const productId = req.params.productId
-//     try {
-//         const deletedWishlistProduct = await Wishlist.findOneAndDelete({ product: productId })
-//         if(deletedWishlistProduct) {
-//             res.status(200).json({message: "Wishlist product deleted successfully", wishlistProduct: deletedWishlistProduct})
-//         }
-//     } catch (error) {
-//         res.status(500).json({error: "Failed to delete wishlist product."})
-//     }
-// })
+app.delete('/wishlist/:productId', async (req, res) => {
+    const productId = req.params.productId
+    try {
+        const deletedWishlistItem = await Wishlist.findOneAndDelete({ productId: productId })
+        if(deletedWishlistItem) {
+            res.status(200).json({message: "Wishlist item deleted successfully", wishlistItem: deletedWishlistItem})
+        }
+    } catch (error) {
+        res.status(500).json({error: "Failed to delete wishlist item."})
+    }
+})
 
 app.get('/cart', async (req, res) => {
     try {
