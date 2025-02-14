@@ -16,6 +16,7 @@ app.use(cors(corsOptions))
 
 const { initializeDatabase } = require('./database/db.connect')
 const Product = require('./models/products.models')
+const Wishlist = require('./models/wishlist.models')
 
 app.use(express.json())
 
@@ -46,16 +47,53 @@ app.get('/products', async (req, res) => {
     }
 })
 
-app.get('/products/:productId', async (req, res) => {
+// app.get('/products/:productId', async (req, res) => {
+//     try {
+//         const product = await Product.findById(req.params.productId)
+//         if(product) {
+//             res.json(product)
+//         } else {
+//             res.status(404).json({error: "No product found."})
+//         }
+//     } catch (error) {
+//         res.status(500).json({error: "Failed to fetch products."})
+//     }
+// })
+
+app.get('/wishlist', async (req, res) => {
     try {
-        const product = await Product.findById(req.params.productId)
-        if(product) {
-            res.json(product)
+        const wishlist = await Wishlist.find().populate('product')
+        if(wishlist.length != 0) {
+            res.json(wishlist)
         } else {
-            res.status(404).json({error: "No product found."})
+            res.status(404).json({error: "No wishlist products found."})
         }
     } catch (error) {
-        res.status(500).json({error: "Failed to fetch products."})
+        res.status(500).json({error: "Failed to fetch wishlist."})
+    }
+})
+
+app.post('/wishlist', async (req, res) => {
+    try {
+        const wishlistProduct = new Wishlist(req.body)
+        const savedWishlistProduct = await wishlistProduct.save()
+        if(savedWishlistProduct) {
+            res.status(201).json({message: "Wishlist product added successfully.", wishlistProduct: savedWishlistProduct})
+        }
+    } catch (error) {
+        res.status(500).json({error: "Failed to add wishlist product."})
+    }
+})
+
+app.delete('/wishlist/:productId', async (req, res) => {
+    const productId = req.params.productId
+    try {
+        const deletedWishlistProduct = await Wishlist.findOneAndDelete({ product: productId })
+        if(deletedWishlistProduct) {
+            res.status(200).json({message: "Wishlist product deleted successfully"})
+        }
+    } catch (error) {
+        res.status(500).json({error: "Failed to delete wishlist product."})
     }
 })
 
