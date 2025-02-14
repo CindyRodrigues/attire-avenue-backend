@@ -75,7 +75,7 @@ app.get('/wishlist', async (req, res) => {
 
 app.post('/wishlist', async (req, res) => {
     try {
-        const wishlistProduct = new Wishlist(req.body)
+        const wishlistProduct = new Wishlist({product: req.body})
         const savedWishlistProduct = await wishlistProduct.save()
         if(savedWishlistProduct) {
             res.status(201).json({message: "Wishlist product added successfully.", wishlistProduct: savedWishlistProduct})
