@@ -100,7 +100,7 @@ app.delete('/wishlist/:productId', async (req, res) => {
 
 app.get('/cart', async (req, res) => {
     try {
-        const cart = await Cart.find().populate('productId')
+        const cart = await Cart.find().populate('product')
         if(cart) {
             res.status(200).json(cart)
         }
@@ -112,7 +112,7 @@ app.get('/cart', async (req, res) => {
 app.post('/cart', async (req, res) => {
     try {
         const { productId } = req.body
-        const cartItem = new Cart({productId})
+        const cartItem = new Cart({product: productId})
         const savedCartItem = await cartItem.save()
         if(savedCartItem) {
             res.status(201).json({message: "Cart item added successfully.", cartItem: savedCartItem})
