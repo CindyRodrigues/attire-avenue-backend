@@ -100,7 +100,7 @@ app.delete('/wishlist/:productId', async (req, res) => {
 
 app.get('/cart', async (req, res) => {
     try {
-        const cart = await Cart.find()
+        const cart = await Cart.find().populate('productId')
         if(cart) {
             res.status(200).json(cart)
         }
