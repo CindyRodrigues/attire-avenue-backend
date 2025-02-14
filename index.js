@@ -17,6 +17,7 @@ app.use(cors(corsOptions))
 const { initializeDatabase } = require('./database/db.connect')
 const Product = require('./models/products.models')
 const Wishlist = require('./models/wishlist.models')
+const Cart = require('./models/cart.models')
 
 app.use(express.json())
 
@@ -94,6 +95,19 @@ app.delete('/wishlist/:productId', async (req, res) => {
         }
     } catch (error) {
         res.status(500).json({error: "Failed to delete wishlist product."})
+    }
+})
+
+app.post('/cart', async (req, res) => {
+    try {
+        const { productId } = req.body
+        const cartItem = new Cart({productId})
+        const savedCartItem = await cartItem.save()
+        if(savedCartItem) {
+            res.status(201).json({message: "Cart item added successfully.", cartItem: savedCartItem})
+        }
+    } catch (error) {
+        res.status(500).json({error: "Failed to add cart item."})
     }
 })
 
