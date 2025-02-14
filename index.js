@@ -90,7 +90,7 @@ app.delete('/wishlist/:productId', async (req, res) => {
     try {
         const deletedWishlistProduct = await Wishlist.findOneAndDelete({ product: productId })
         if(deletedWishlistProduct) {
-            res.status(200).json({message: "Wishlist product deleted successfully"})
+            res.status(200).json({message: "Wishlist product deleted successfully", wishlistProduct: deletedWishlistProduct})
         }
     } catch (error) {
         res.status(500).json({error: "Failed to delete wishlist product."})
