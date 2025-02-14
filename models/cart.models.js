@@ -10,7 +10,7 @@ const cartSchema = new mongoose.Schema({
         type: Number,
         default: 1
     }
-})
+}, { timestamps: true })
 
 const Cart = mongoose.model('Cart', cartSchema)
 

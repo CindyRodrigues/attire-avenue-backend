@@ -63,40 +63,39 @@ app.get('/products', async (req, res) => {
 
 app.get('/wishlist', async (req, res) => {
     try {
-        const wishlist = await Wishlist.find().populate('productId')
-        if(wishlist.length != 0) {
+        const wishlist = await Wishlist.find()
+        if(wishlist) {
             res.json(wishlist)
-        } else {
-            res.status(404).json({error: "No wishlist products found."})
         }
     } catch (error) {
-        res.status(500).json({error: "Failed to fetch wishlist."})
+        res.status(500).json({error: "Failed to fetch wishlist items."})
     }
 })
 
 app.post('/wishlist', async (req, res) => {
     try {
-        const wishlistProduct = new Wishlist(req.body)
-        const savedWishlistProduct = await wishlistProduct.save()
-        if(savedWishlistProduct) {
-            res.status(201).json({message: "Wishlist product added successfully.", wishlistProduct: savedWishlistProduct.populate('product')})
+        const { productId } = req.body
+        const wishlistItem = new Wishlist({productId})
+        const savedWishlistItem = await wishlistItem.save()
+        if(savedWishlistItem) {
+            res.status(201).json({message: "Wishlist item added successfully.", wishlistItem: savedWishlistItem})
         }
     } catch (error) {
-        res.status(500).json({error: "Failed to add wishlist product."})
+        res.status(500).json({error: "Failed to add wishlist item."})
     }
 })
 
-app.delete('/wishlist/:productId', async (req, res) => {
-    const productId = req.params.productId
-    try {
-        const deletedWishlistProduct = await Wishlist.findOneAndDelete({ product: productId })
-        if(deletedWishlistProduct) {
-            res.status(200).json({message: "Wishlist product deleted successfully", wishlistProduct: deletedWishlistProduct})
-        }
-    } catch (error) {
-        res.status(500).json({error: "Failed to delete wishlist product."})
-    }
-})
+// app.delete('/wishlist/:productId', async (req, res) => {
+//     const productId = req.params.productId
+//     try {
+//         const deletedWishlistProduct = await Wishlist.findOneAndDelete({ product: productId })
+//         if(deletedWishlistProduct) {
+//             res.status(200).json({message: "Wishlist product deleted successfully", wishlistProduct: deletedWishlistProduct})
+//         }
+//     } catch (error) {
+//         res.status(500).json({error: "Failed to delete wishlist product."})
+//     }
+// })
 
 app.get('/cart', async (req, res) => {
     try {
