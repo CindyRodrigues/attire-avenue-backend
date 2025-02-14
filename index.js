@@ -63,7 +63,7 @@ app.get('/products', async (req, res) => {
 
 app.get('/wishlist', async (req, res) => {
     try {
-        const wishlist = await Wishlist.find().populate('product')
+        const wishlist = await Wishlist.find().populate('productId')
         if(wishlist.length != 0) {
             res.json(wishlist)
         } else {
@@ -100,7 +100,7 @@ app.delete('/wishlist/:productId', async (req, res) => {
 
 app.get('/cart', async (req, res) => {
     try {
-        const cart = await Cart.find().populate('product')
+        const cart = await Cart.find()
         if(cart) {
             res.status(200).json(cart)
         }
@@ -112,7 +112,7 @@ app.get('/cart', async (req, res) => {
 app.post('/cart', async (req, res) => {
     try {
         const { productId } = req.body
-        const cartItem = new Cart({product: productId})
+        const cartItem = new Cart({productId})
         const savedCartItem = await cartItem.save()
         if(savedCartItem) {
             res.status(201).json({message: "Cart item added successfully.", cartItem: savedCartItem})
