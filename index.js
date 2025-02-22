@@ -64,7 +64,7 @@ app.get('/products', async (req, res) => {
 app.get('/wishlist', async (req, res) => {
     try {
         const wishlist = await Wishlist.find()
-        if(wishlist) {
+        if(wishlist.length != 0) {
             res.json(wishlist)
         }
     } catch (error) {
@@ -100,7 +100,7 @@ app.delete('/wishlist/:productId', async (req, res) => {
 app.get('/cart', async (req, res) => {
     try {
         const cart = await Cart.find()
-        if(cart) {
+        if(cart.length != 0) {
             res.status(200).json(cart)
         }
     } catch (error) {
