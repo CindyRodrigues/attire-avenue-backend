@@ -39,9 +39,9 @@ app.get('/products', async (req, res) => {
     try {
         const products = await Product.find()
         if(products.length != 0) {
-            res.json(products)
+            return res.json(products)
         } else {
-            res.status(404).json({error: "No products found."})
+            return res.status(404).json({error: "No products found."})
         }
     } catch (error) {
         res.status(500).json({error: "Failed to fetch products."})
