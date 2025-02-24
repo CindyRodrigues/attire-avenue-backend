@@ -64,7 +64,7 @@ app.get('/products', async (req, res) => {
 app.get('/wishlist', async (req, res) => {
     try {
         const wishlist = await Wishlist.find()
-        if(wishlist.length != 0) {
+        if(wishlist.length) {
             res.json(wishlist)
         }
     } catch (error) {
